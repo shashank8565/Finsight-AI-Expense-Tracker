@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { analyticsService, transactionService } from "../../api/services";
+import { DashboardSkeleton } from "../components/ui/PageSkeleton";
 
 const COLORS = ["#FF6B6B", "#C8FF00", "#7B61FF", "#00E5A0", "#FFB800", "#4B9FFF"];
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -106,11 +107,7 @@ export function Dashboard() {
   const budgetProgress = summary.budgetGoal > 0 ? (summary.totalExpense / summary.budgetGoal) * 100 : 0;
 
   if (isSummaryLoading || isCategoryLoading || isTransactionsLoading || isMerchantLoading) {
-    return (
-      <div className="flex h-[80vh] items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#C8FF00] animate-spin" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (

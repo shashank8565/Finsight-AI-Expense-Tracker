@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Sparkles, AlertCircle, TrendingUp, Send, Loader2, RefreshCw, Lightbulb, ShieldCheck } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { aiService, analyticsService } from "../../api/services";
+import { Skeleton } from "../components/ui/skeleton";
+import { ListSkeleton } from "../components/ui/PageSkeleton";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip } from "recharts";
 
 const quickPrompts = [
@@ -113,8 +115,10 @@ export function AIInsights() {
             <h3 className="font-semibold text-white">Spending Alerts</h3>
           </div>
           {isSummaryLoading ? (
-            <div className="flex justify-center py-4">
-              <Loader2 className="w-6 h-6 animate-spin text-[#FF6B6B]" />
+            <div className="space-y-3 pt-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/6" />
             </div>
           ) : summary?.anomalies?.length > 0 ? (
             <div className="space-y-3">
@@ -173,8 +177,10 @@ export function AIInsights() {
             <h3 className="font-semibold text-white">Month Projection</h3>
           </div>
           {isSummaryLoading ? (
-            <div className="flex justify-center py-6">
-              <Loader2 className="w-6 h-6 animate-spin text-[#00E5A0]" />
+            <div className="space-y-4 pt-2">
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-16 w-full rounded-xl" />
             </div>
           ) : (
             <>
@@ -319,8 +325,8 @@ export function AIInsights() {
             <h3 className="text-[20px] font-semibold text-white">Smart Suggestions</h3>
           </div>
           {isSummaryLoading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="w-8 h-8 animate-spin text-[#FFB800]" />
+            <div className="pt-4">
+              <ListSkeleton count={3} />
             </div>
           ) : summary?.tips?.length > 0 ? (
             <div className="space-y-3">

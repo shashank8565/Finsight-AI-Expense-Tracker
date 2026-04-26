@@ -1,14 +1,16 @@
 import { useState } from "react";
+import { Search, Plus, MoreVertical, Loader2, ChevronLeft, ChevronRight, Calendar, Edit2, Trash2, Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { Search, Plus, MoreVertical, Loader2, ChevronLeft, ChevronRight, Calendar, Edit2, Trash2, Download } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { transactionService, categoryService } from "../../api/services";
+import { Loader } from "../components/ui/Loader";
+import { ListSkeleton } from "../components/ui/PageSkeleton";
 import {
   Dialog,
   DialogContent,
@@ -383,9 +385,7 @@ export function Expenses() {
 
       <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-[20px] p-6">
         {isLoading ? (
-          <div className="py-12 flex justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-[#C8FF00]" />
-          </div>
+          <ListSkeleton count={7} />
         ) : transactions.length === 0 ? (
           <div className="py-12 text-center text-white/60">
             No expenses found.

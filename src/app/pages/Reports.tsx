@@ -2,6 +2,7 @@ import { BarChart3, Receipt, Loader2 } from "lucide-react";
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Legend, Tooltip } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { analyticsService } from "../../api/services";
+import { GenericPageSkeleton } from "../components/ui/PageSkeleton";
 
 const COLORS = ["#FF6B6B", "#C8FF00", "#7B61FF", "#00E5A0", "#FFB800", "#4B9FFF", "#FF6B6B", "#C8FF00"];
 
@@ -23,11 +24,7 @@ export function Reports() {
   });
 
   if (isCategoryLoading || isCashFlowLoading) {
-    return (
-      <div className="flex h-[80vh] items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#C8FF00] animate-spin" />
-      </div>
-    );
+    return <GenericPageSkeleton />;
   }
 
   const rawCategory = categoryData || [];

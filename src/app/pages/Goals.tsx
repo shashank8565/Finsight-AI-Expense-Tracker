@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Flame, Trophy, Lock, Award, Target, Zap, TrendingUp, Plus, Loader2, Coins, ShoppingBag } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { goalService, userService, analyticsService } from "../../api/services";
+import { Loader } from "../components/ui/Loader";
+import { CardGridSkeleton } from "../components/ui/PageSkeleton";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +34,7 @@ export function Goals() {
   // Fetch dashboard summary for streak
   const { data: dashboardData } = useQuery({
     queryKey: ["dashboard-summary"],
-    queryFn: analyticsService.getDashboardSummary,
+    queryFn: () => analyticsService.getDashboardSummary(),
   });
 
   const { data: goals = [], isLoading } = useQuery({
@@ -394,9 +396,7 @@ export function Goals() {
           <h3 className="text-[20px] font-semibold text-white mb-4">Your Goals</h3>
           
           {isLoading ? (
-            <div className="py-8 flex justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-[#C8FF00]" />
-            </div>
+            <CardGridSkeleton count={4} />
           ) : goals.length === 0 ? (
             <div className="py-8 text-center text-white/60">
               No goals found. Create one to start saving!

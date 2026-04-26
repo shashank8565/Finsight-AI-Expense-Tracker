@@ -2,6 +2,8 @@ import { useState } from "react";
 import { TrendingUp, Shield, Zap, Star, Calculator, Plus, Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { investmentService } from "../../api/services";
+import { Loader } from "../components/ui/Loader";
+import { CardGridSkeleton } from "../components/ui/PageSkeleton";
 import {
   Dialog,
   DialogContent,
@@ -190,9 +192,7 @@ export function Investments() {
       </div>
 
       {isLoading ? (
-        <div className="py-12 flex justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-[#C8FF00]" />
-        </div>
+        <CardGridSkeleton count={3} />
       ) : investments.length === 0 ? (
          <div className="py-12 text-center text-white/60 bg-white/5 border border-white/10 rounded-[20px]">
           No investments found. Add one to start tracking your portfolio.

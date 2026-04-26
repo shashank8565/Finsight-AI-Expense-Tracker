@@ -25,6 +25,14 @@ export const authService = {
     const { data } = await api.post("/auth/reset-password", payload);
     return data;
   },
+  refreshToken: async (refreshToken: string) => {
+    const { data } = await api.post("/auth/refresh", { refreshToken });
+    return data.data;
+  },
+  logout: async () => {
+    const { data } = await api.post("/auth/logout");
+    return data;
+  },
 };
 
 export const userService = {

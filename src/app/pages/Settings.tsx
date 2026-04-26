@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { User, Bell, Palette, Link as LinkIcon, Shield, Mail, MapPin, Loader2, Flame, Trophy, Award, LogOut, BadgeCheck, ShieldAlert } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService, analyticsService, authService } from "../../api/services";
+import { GenericPageSkeleton } from "../components/ui/PageSkeleton";
 import {
   Select,
   SelectContent,
@@ -90,8 +91,14 @@ export function Settings() {
     updateMutation.mutate({ notifications: updated });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch (err) {
+      // Ignore error on logout
+    }
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     toast.success("Logged out successfully");
     navigate("/");
   };
@@ -121,11 +128,7 @@ export function Settings() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-[80vh] items-center justify-center">
-        <Loader2 className="w-12 h-12 text-[#C8FF00] animate-spin" />
-      </div>
-    );
+    return <GenericPageSkeleton />;
   }
 
   const initials = profile?.name ? profile.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() : 'U';

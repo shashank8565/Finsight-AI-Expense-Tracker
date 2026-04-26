@@ -20,6 +20,7 @@ export function Login() {
     mutationFn: authService.login,
     onSuccess: (data) => {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("finsight_returning_user", "true");
       toast.success(`Welcome back, ${data.name}!`);
       
@@ -41,6 +42,7 @@ export function Login() {
     mutationFn: authService.register,
     onSuccess: (data) => {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("refreshToken", data.refreshToken);
       localStorage.setItem("finsight_returning_user", "true");
       toast.success(`Account created! Check your email for the verification code.`);
 
