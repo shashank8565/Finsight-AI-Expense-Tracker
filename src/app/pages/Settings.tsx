@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User, Bell, Palette, Link as LinkIcon, Shield, Mail, MapPin, Loader2, Flame, Trophy, Award, LogOut, BadgeCheck, ShieldAlert } from "lucide-react";
+import { User, Bell, Palette, Link as LinkIcon, Shield, Mail, MapPin, Loader2, Flame, Trophy, Award, LogOut, BadgeCheck, ShieldAlert, Bot } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userService, analyticsService, authService } from "../../api/services";
 import { GenericPageSkeleton } from "../components/ui/PageSkeleton";
@@ -18,6 +18,7 @@ export function Settings() {
   const navigate = useNavigate();
   const [verificationCode, setVerificationCode] = useState("");
   const [showVerifyInput, setShowVerifyInput] = useState(false);
+  const [telegramCode, setTelegramCode] = useState<string | null>(null);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile"],
@@ -124,6 +125,17 @@ export function Settings() {
     },
     onError: () => {
       toast.error("Failed to send verification email");
+    }
+  });
+
+  const telegramLinkMutation = useMutation({
+    mutationFn: userService.generateTelegramLinkCode,
+    onSuccess: (data) => {
+      setTelegramCode(data.telegramLinkCode);
+      toast.success("Linking code generated!");
+    },
+    onError: () => {
+      toast.error("Failed to generate linking code");
     }
   });
 
@@ -448,17 +460,39 @@ export function Settings() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
+                { name: "Telegram Bot", icon: <Bot className="w-8 h-8 mx-auto" />, isAction: true },
                 { name: "UPI", icon: "💳", status: "Coming Soon" },
                 { name: "SMS Parser", icon: "📱", status: "Coming Soon" },
                 { name: "Bank Sync", icon: "🏦", status: "Coming Soon" },
               ].map((account) => (
                 <div
                   key={account.name}
-                  className="p-4 bg-white/5 border border-white/10 rounded-xl text-center opacity-50 hover:opacity-60 transition-all"
+                  onClick={() => {
+                    if (account.isAction && !profile?.telegramId) {
+                       telegramLinkMutation.mutate();
+                    }
+                  }}
+                  className={`p-4 bg-white/5 border border-white/10 rounded-xl text-center transition-all ${
+                    account.isAction ? "cursor-pointer hover:bg-white/10" : "opacity-50 hover:opacity-60"
+                  }`}
                 >
-                  <div className="text-3xl mb-2">{account.icon}</div>
+                  <div className="text-3xl mb-2">{account.isAction && account.name === "Telegram Bot" ? (profile?.telegramId ? <BadgeCheck className="w-8 h-8 mx-auto text-[#00E5A0]" /> : account.icon) : account.icon}</div>
                   <div className="text-white font-medium mb-1">{account.name}</div>
-                  <div className="text-xs text-white/60">{account.status}</div>
+                  <div className="text-xs text-white/60">
+                    {account.isAction && account.name === "Telegram Bot" ? (
+                      profile?.telegramId ? (
+                        "Linked"
+                      ) : telegramCode ? (
+                        <span className="text-[#C8FF00] font-mono text-sm tracking-widest bg-[#C8FF00]/10 px-2 py-1 rounded">{telegramCode}</span>
+                      ) : telegramLinkMutation.isPending ? (
+                        "Generating..."
+                      ) : (
+                        "Click to link"
+                      )
+                    ) : (
+                      account.status
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

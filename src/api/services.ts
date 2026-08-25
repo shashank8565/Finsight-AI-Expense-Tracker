@@ -44,6 +44,10 @@ export const userService = {
     const { data } = await api.put("/users/me", userData);
     return data.data;
   },
+  generateTelegramLinkCode: async () => {
+    const { data } = await api.post("/users/telegram/link-code");
+    return data.data;
+  },
 };
 
 export const transactionService = {
